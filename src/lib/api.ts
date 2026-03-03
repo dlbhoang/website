@@ -11,7 +11,10 @@ type ApiListResponse<T> = {
 }
 
 const DEFAULT_BASE_URL = 'http://103.77.243.38:3006'
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? DEFAULT_BASE_URL
+const BASE_URL =
+  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
+  // When deployed on HTTPS (e.g. Vercel), use same-origin proxy to avoid Mixed Content.
+  (import.meta.env.PROD ? '/api' : DEFAULT_BASE_URL)
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, init)
